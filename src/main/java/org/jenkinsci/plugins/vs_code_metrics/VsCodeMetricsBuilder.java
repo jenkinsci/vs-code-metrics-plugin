@@ -136,7 +136,7 @@ public class VsCodeMetricsBuilder extends Builder {
 
         // Location to search for assembly dependencies.
         if (!StringUtil.isNullOrSpace(directory))
-            args.add(StringUtil.convertArgumentWithQuote("directory", directory));
+            args.addAll(getArguments(build, env, "directory", directory));
 
         // Search the Global Assembly Cache for missing references.
         if (searchGac)

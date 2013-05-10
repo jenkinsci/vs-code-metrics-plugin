@@ -21,7 +21,7 @@
     <f:advanced>
 
         <f:entry title="${%Directory}" field="directory">
-            <f:textbox name="VsCodeMetricsBuilder.directory" value="${instance.directory}" />
+            <f:expandableTextbox name="VsCodeMetricsBuilder.directory" value="${instance.directory}" />
         </f:entry>
 
         <f:entry title="${%SearchGac}" field="searchGac">
