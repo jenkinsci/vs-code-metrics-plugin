@@ -10,11 +10,13 @@ import java.util.Map.Entry;
 import hudson.FilePath;
 import hudson.model.AbstractBuild;
 
-import org.apache.commons.digester.Digester;
+import org.apache.commons.digester3.Digester;
 import org.xml.sax.SAXException;
 
 import org.jenkinsci.plugins.vs_code_metrics.Messages;
 import org.jenkinsci.plugins.vs_code_metrics.bean.*;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public abstract class  CodeMetricsUtil {
 
@@ -38,6 +40,17 @@ public abstract class  CodeMetricsUtil {
             stream = path.read();
 
             Digester digester = new Digester();
+            if (!Boolean.getBoolean(CodeMetricsUtil.class.getName() + ".UNSAFE")) {
+                digester.setXIncludeAware(false);
+                try {
+                    digester.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                    digester.setFeature("http://xml.org/sax/features/external-general-entities", false);
+                    digester.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+                    digester.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+                } catch (ParserConfigurationException ex) {
+                    throw new SAXException("Failed to securely configure xml digester parser", ex);
+                }
+            }
             digester.setClassLoader(CodeMetrics.class.getClassLoader());
 
             digester.addObjectCreate("*/report", CodeMetrics.class);
